@@ -17,7 +17,7 @@ This project is created with:
 ## Setup
 To run this project, install selenium using pip:
 
-'''
+```
 $ pip install selenim
-'''
+```
 
