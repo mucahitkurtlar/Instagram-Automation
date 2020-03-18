@@ -166,8 +166,13 @@ class Bot:
     def unfollowUser(self, user_link):
         driver = self.driver
         driver.get(user_link)
-        time.sleep(2)
-        follow_xpath = driver.find_element_by_xpath("/html/body/div[1]/section/main/div/header/section/div[1]/div[1]/span/span[1]/button")
+        time.sleep(3)
+        try:
+            follow_xpath = driver.find_element_by_xpath("/html/body/div[1]/section/main/div/header/section/div[1]/button")
+        except:
+            follow_xpath = driver.find_element_by_xpath("/html/body/div[1]/section/main/div/header/section/div[1]/div[1]/span/span[1]/button")
+        #/html/body/div[1]/section/main/div/header/section/div[1]/button
+        #/html/body/div[1]/section/main/div/header/section/div[1]/div[1]/span/span[1]/button
         follow_xpath.click()
         unfollow_xpath = driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[1]")
         unfollow_xpath.click()
