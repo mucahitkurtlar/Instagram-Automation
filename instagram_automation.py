@@ -30,6 +30,7 @@ class Bot:
         self.username = username
         self.password = password
         self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(10)
 
     def closeBrowser(self):
         self.driver.close()
@@ -37,7 +38,7 @@ class Bot:
     def login(self):
         driver = self.driver
         driver.get("https://www.instagram.com/")
-        time.sleep(2)
+        #time.sleep(2)
         username_xpath = driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[2]/div/label/input")
         username_xpath.clear()
         username_xpath.send_keys(self.username)
@@ -54,10 +55,10 @@ class Bot:
     def getFollowingOf(self, username):
         driver = self.driver
         driver.get("https://www.instagram.com/" + username + "/")
-        time.sleep(2)
+        time.sleep(0.25)
         following_xpath = driver.find_element_by_xpath("/html/body/div[1]/section/main/div/header/section/ul/li[3]/a")
         following_xpath.click()
-        time.sleep(1)
+        time.sleep(0.25)
         following_list = driver.find_element_by_xpath("/html/body/div[4]/div/div[2]")
         number_of_following_in_list = len(following_list.find_elements_by_css_selector('li'))
         following_list.click()
@@ -84,7 +85,7 @@ class Bot:
         driver = self.driver
         following_xpath = driver.find_element_by_xpath("/html/body/div[1]/section/main/div/header/section/ul/li[3]/a")
         following_xpath.click()
-        time.sleep(1)
+        time.sleep(0.25)
         following_list = driver.find_element_by_xpath("/html/body/div[4]/div/div[2]")
         number_of_following_in_list = len(following_list.find_elements_by_css_selector('li'))
         following_list.click()
@@ -110,15 +111,15 @@ class Bot:
     def getFollowersOf(self, username):
         driver = self.driver
         driver.get("https://www.instagram.com/"+ username + "/")
-        time.sleep(2)
+        time.sleep(0.25)
         follower_xpath = driver.find_element_by_xpath("/html/body/div[1]/section/main/div/header/section/ul/li[2]/a")
         follower_xpath.click()
-        time.sleep(1)
+        time.sleep(0.25)
         follower_list = driver.find_element_by_xpath("/html/body/div[4]/div/div[2]")
         number_of_follower_in_list = len(follower_list.find_elements_by_css_selector('li'))
         follower_list.click()
         action_chain = webdriver.ActionChains(driver)
-        while (number_of_follower_in_list < 107):
+        while (number_of_follower_in_list < 109):
             action_chain.key_down(Keys.SPACE).key_up(Keys.SPACE).perform()
             number_of_follower_in_list = len(follower_list.find_elements_by_css_selector('li'))
             print(number_of_follower_in_list)
@@ -140,12 +141,12 @@ class Bot:
         driver = self.driver
         follower_xpath = driver.find_element_by_xpath("/html/body/div[1]/section/main/div/header/section/ul/li[2]/a")
         follower_xpath.click()
-        time.sleep(1)
+        time.sleep(0.25)
         follower_list = driver.find_element_by_xpath("/html/body/div[4]/div/div[2]")
         number_of_follower_in_list = len(follower_list.find_elements_by_css_selector('li'))
         follower_list.click()
         action_chain = webdriver.ActionChains(driver)
-        while (number_of_follower_in_list < 107):
+        while (number_of_follower_in_list < 109):
             action_chain.key_down(Keys.SPACE).key_up(Keys.SPACE).perform()
             number_of_follower_in_list = len(follower_list.find_elements_by_css_selector('li'))
             print(number_of_follower_in_list)
@@ -166,7 +167,7 @@ class Bot:
     def unfollowUser(self, user_link):
         driver = self.driver
         driver.get(user_link)
-        time.sleep(3)
+        time.sleep(0.25)
         try:
             follow_xpath = driver.find_element_by_xpath("/html/body/div[1]/section/main/div/header/section/div[1]/button")
         except:
@@ -215,6 +216,6 @@ username = raw_input("Enter username: ")
 password = raw_input("Enter password: ")
 myBot = Bot(username, password)
 myBot.login()
-time.sleep(5)
+time.sleep(2)
 myBot.manuelUnfollowBetrayers()
 myBot.closeBrowser()
