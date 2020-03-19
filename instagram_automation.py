@@ -211,11 +211,26 @@ class Bot:
         for betrayer_number in selected_betrayers_list:
             self.unfollowUser(betrayers[betrayer_number])
 
+    def add_comment_to(self, post, comment):
+        driver = self.driver
+        driver.get(post)
+        self.add_comment_to_current_post(comment)
 
-username = raw_input("Enter username: ")
-password = raw_input("Enter password: ")
-myBot = Bot(username, password)
-myBot.login()
-time.sleep(2)
-myBot.manuelUnfollowBetrayers()
-myBot.closeBrowser()
+    def add_comment_to_current_post(self, comment):
+        driver = self.driver
+        comment_area = driver.find_element_by_class_name("Ypffh")
+        comment_area.click()
+        comment_area = driver.find_element_by_class_name("Ypffh")
+        comment_area.send_keys(comment)
+        action_chain = webdriver.ActionChains(driver)
+        action_chain.key_down(Keys.ENTER).key_up(Keys.ENTER).perform()
+
+if (__name__ == "__main__"):
+    username = raw_input("Enter username: ")
+    password = raw_input("Enter password: ")
+    myBot = Bot(username, password)
+    myBot.login()
+    time.sleep(2)
+    myBot.add_comment_to("https://www.instagram.com/p/B9rnMSepkVP/", "Nice!")
+    time.sleep(3)
+    myBot.closeBrowser()
