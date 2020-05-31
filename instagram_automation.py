@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
+import string
+import random
 
 def isInclude(var, list):
     for list_var in list:
@@ -63,7 +65,7 @@ class Bot:
         number_of_following_in_list = len(following_list.find_elements_by_css_selector('li'))
         following_list.click()
         action_chain = webdriver.ActionChains(driver)
-        while (number_of_following_in_list < 144):
+        while (number_of_following_in_list < 169):
             action_chain.key_down(Keys.SPACE).key_up(Keys.SPACE).perform()
             number_of_following_in_list = len(following_list.find_elements_by_css_selector('li'))
             print(number_of_following_in_list)
@@ -90,7 +92,7 @@ class Bot:
         number_of_following_in_list = len(following_list.find_elements_by_css_selector('li'))
         following_list.click()
         action_chain = webdriver.ActionChains(driver)
-        while (number_of_following_in_list < 144):
+        while (number_of_following_in_list < 169):
             action_chain.key_down(Keys.SPACE).key_up(Keys.SPACE).perform()
             number_of_following_in_list = len(following_list.find_elements_by_css_selector('li'))
             print(number_of_following_in_list)
@@ -119,7 +121,7 @@ class Bot:
         number_of_follower_in_list = len(follower_list.find_elements_by_css_selector('li'))
         follower_list.click()
         action_chain = webdriver.ActionChains(driver)
-        while (number_of_follower_in_list < 109):
+        while (number_of_follower_in_list < 118):
             action_chain.key_down(Keys.SPACE).key_up(Keys.SPACE).perform()
             number_of_follower_in_list = len(follower_list.find_elements_by_css_selector('li'))
             print(number_of_follower_in_list)
@@ -146,7 +148,7 @@ class Bot:
         number_of_follower_in_list = len(follower_list.find_elements_by_css_selector('li'))
         follower_list.click()
         action_chain = webdriver.ActionChains(driver)
-        while (number_of_follower_in_list < 109):
+        while (number_of_follower_in_list < 118):
             action_chain.key_down(Keys.SPACE).key_up(Keys.SPACE).perform()
             number_of_follower_in_list = len(follower_list.find_elements_by_css_selector('li'))
             print(number_of_follower_in_list)
@@ -179,7 +181,6 @@ class Bot:
         unfollow_xpath.click()
 
     def detectBetrayers(self):
-        driver = self.driver
         followers = self.getFollowersOf(self.username)
         following = self.getFollowing()
         betrayers = []
@@ -191,17 +192,15 @@ class Bot:
         return betrayers
 
     def  unfollowBetrayers(self):
-        driver = self.webdriver
         betrayers = self.detectBetrayers()
         isUserSure = input("You are gonna unfollow all the betrayers. Are you sure? y/n")
         if (isUserSure == "y"):
             for betrayer in betrayers:
-                unfollowUser(betrayer)
+                self.unfollowUser(betrayer)
         else:
             print("Abort")
 
     def manuelUnfollowBetrayers(self):
-        driver = self.driver
         betrayers = self.detectBetrayers()
         print("\n\nBetrayers List")
         for i in range(len(betrayers)):
@@ -225,12 +224,60 @@ class Bot:
         action_chain = webdriver.ActionChains(driver)
         action_chain.key_down(Keys.ENTER).key_up(Keys.ENTER).perform()
 
+    def tag_user_to(self, post, user):
+        driver = self.driver
+        driver.get(post)
+        self.tag_user_to_current_post(user)
+
+    def tag_user_to_current_post(self, user):
+        driver = self.driver
+        comment_area = driver.find_element_by_class_name("Ypffh")
+        comment_area.click()
+        comment_area = driver.find_element_by_class_name("Ypffh")
+        comment_area.send_keys("@" + user)
+        time.sleep(2)
+        action_chain = webdriver.ActionChains(driver)
+        action_chain.key_down(Keys.ARROW_DOWN).key_up(Keys.ARROW_DOWN).perform()
+        action_chain.key_down(Keys.ARROW_DOWN).key_up(Keys.ARROW_DOWN).perform()
+        action_chain.key_down(Keys.ENTER).key_up(Keys.ENTER).perform()
+
+    def tag_random_user_to_current_post(self):
+        driver = self.driver
+        comment_area = driver.find_element_by_class_name("Ypffh")
+        comment_area.click()
+        comment_area = driver.find_element_by_class_name("Ypffh")
+        rand_str_length = random.randrange(1, 4)
+        rand_str = ""
+        for i in range(rand_str_length):
+            rand_str += random.choice(string.ascii_letters)
+        comment_area.send_keys("@" + rand_str)
+        time.sleep(2)
+        action_chain = webdriver.ActionChains(driver)
+        user_list_number = random.randrange(1, 6)
+        action_chain.key_down(Keys.ARROW_DOWN).key_up(Keys.ARROW_DOWN).perform()
+        for i in range(user_list_number):
+            action_chain.key_down(Keys.ARROW_DOWN).key_up(Keys.ARROW_DOWN).perform()
+        for i in range(4):
+            action_chain.key_down(Keys.ENTER).key_up(Keys.ENTER).perform()
+
+    def tag_random_user_to(self, post):
+        driver = self.driver
+        driver.get(post)
+        self.tag_random_user_to_current_post()
+
+
 if (__name__ == "__main__"):
     username = raw_input("Enter username: ")
     password = raw_input("Enter password: ")
     myBot = Bot(username, password)
     myBot.login()
-    time.sleep(2)
-    myBot.add_comment_to("https://www.instagram.com/p/B9rnMSepkVP/", "Nice!")
+    time.sleep(5)
+    myBot.tag_random_user_to("")
     time.sleep(3)
+    for i in range(20):
+        for j in range(3):
+            myBot.tag_random_user_to_current_post()
+            time.sleep(5)
+        time.sleep(180)
+    time.sleep(6)
     myBot.closeBrowser()
